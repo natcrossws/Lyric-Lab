@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="{{lang}}">
+<head>
+  <meta charset="UTF-8" />
+  <title>{{subject}}</title>
+</head>
+<body style="margin:0;padding:0;background:#f4efe6;font-family:'Helvetica Neue',Arial,sans-serif;color:#1f2933;">
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#f4efe6;padding:32px 0;">
+    <tr>
+      <td align="center">
+        <table role="presentation" width="600" cellpadding="0" cellspacing="0" style="background:#ffffff;border-radius:18px;overflow:hidden;box-shadow:0 6px 20px rgba(15,23,42,0.08);">
+          <!-- Header -->
+          <tr>
+            <td style="background:linear-gradient(135deg,#0e7c7b,#16b3a6);padding:36px 32px;color:#ffffff;text-align:center;">
+              {{#logoUrl}}<img src="{{logoUrl}}" alt="{{tenantNombre}}" style="max-height:56px;margin-bottom:16px;" />{{/logoUrl}}
+              <div style="font-size:13px;letter-spacing:3px;text-transform:uppercase;opacity:0.85;">{{tenantNombre}}</div>
+              <h1 style="margin:8px 0 4px;font-size:28px;font-weight:600;">{{strings.title}}</h1>
+              <p style="margin:0;font-size:15px;opacity:0.9;">{{strings.subtitle}}</p>
+            </td>
+          </tr>
+
+          <!-- Greeting -->
+          <tr>
+            <td style="padding:32px 32px 8px;">
+              <p style="margin:0 0 16px;font-size:16px;line-height:1.6;">
+                {{strings.greetingPre}} <strong>{{cliente.nombre}}</strong>,
+              </p>
+              <p style="margin:0 0 8px;font-size:15px;line-height:1.6;color:#475569;">
+                {{strings.thanks}}
+              </p>
+            </td>
+          </tr>
+
+          <!-- Folio + fecha -->
+          <tr>
+            <td style="padding:8px 32px 16px;">
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border:1px solid #e2e8f0;border-radius:12px;overflow:hidden;">
+                <tr>
+                  <td style="padding:18px 20px;background:#f8fafc;border-bottom:1px solid #e2e8f0;">
+                    <div style="font-size:12px;letter-spacing:2px;text-transform:uppercase;color:#64748b;">{{strings.folio}}</div>
+                    <div style="font-size:22px;font-weight:600;color:#0f172a;letter-spacing:1px;">{{folio}}</div>
+                  </td>
+                </tr>
+                <tr>
+                  <td style="padding:18px 20px;">
+                    <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
+                      <tr>
+                        <td style="padding:6px 0;color:#475569;font-size:14px;">{{strings.fechaVisita}}</td>
+                        <td align="right" style="font-weight:600;font-size:14px;">{{fechaVisitaFmt}}</td>
+                      </tr>
+                      <tr>
+                        <td style="padding:6px 0;color:#475569;font-size:14px;">{{strings.paquete}}</td>
+                        <td align="right" style="font-weight:600;font-size:14px;">{{paqueteNombre}}</td>
+                      </tr>
+                      {{#horario}}
+                      <tr>
+                        <td style="padding:6px 0;color:#475569;font-size:14px;">{{strings.horario}}</td>
+                        <td align="right" style="font-weight:600;font-size:14px;">{{horario}}</td>
+                      </tr>
+                      {{/horario}}
+                    </table>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <!-- QR check-in -->
+          {{#hasQr}}
+          <tr>
+            <td style="padding:12px 24px 20px;text-align:center;">
+              <h3 style="margin:0 0 12px;font-size:14px;letter-spacing:2px;text-transform:uppercase;color:#0e7c7b;">{{strings.qrTitle}}</h3>
+              <img src="{{{qrDataUrl}}}" alt="QR {{folio}}" width="320" height="320" style="display:block;margin:0 auto 12px;border-radius:16px;max-width:100%;height:auto;" />
+              <p style="margin:0;font-size:13px;color:#64748b;line-height:1.5;">{{strings.qrHint}}</p>
+            </td>
+          </tr>
+          {{/hasQr}}
+
+          <!-- Desglose -->
+          <tr>
+            <td style="padding:8px 32px 16px;">
+              <h3 style="margin:0 0 12px;font-size:14px;letter-spacing:2px;text-transform:uppercase;color:#0e7c7b;">{{strings.desglose}}</h3>
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="font-size:14px;">
+                {{#lineas}}
+                <tr>
+                  <td style="padding:8px 0;border-bottom:1px solid #f1f5f9;color:#1f2933;">
+                    {{descripcion}}
+                  </td>
+                  <td align="right" style="padding:8px 0;border-bottom:1px solid #f1f5f9;font-weight:600;color:#0f172a;">
+                    {{importe}}
+                  </td>
+                </tr>
+                {{/lineas}}
+                {{#hasDescuento}}
+                <tr>
+                  <td style="padding:8px 0;color:#16a34a;">{{strings.descuento}}</td>
+                  <td align="right" style="padding:8px 0;font-weight:600;color:#16a34a;">−{{descuentoFmt}}</td>
+                </tr>
+                {{/hasDescuento}}
+                <tr>
+                  <td style="padding:14px 0 0;font-size:16px;font-weight:600;">{{strings.total}}</td>
+                  <td align="right" style="padding:14px 0 0;font-size:18px;font-weight:700;color:#0e7c7b;">{{totalFmt}}</td>
+                </tr>
+                {{#hasSaldoPendiente}}
+                <tr>
+                  <td style="padding:8px 0 0;color:#475569;">{{strings.anticipo}}</td>
+                  <td align="right" style="padding:8px 0 0;font-weight:600;">{{montoPagadoFmt}}</td>
+                </tr>
+                <tr>
+                  <td style="padding:6px 0 0;color:#b45309;font-weight:600;">{{strings.saldoPendiente}}</td>
+                  <td align="right" style="padding:6px 0 0;font-weight:700;color:#b45309;">{{saldoPendienteFmt}}</td>
+                </tr>
+                {{/hasSaldoPendiente}}
+              </table>
+            </td>
+          </tr>
+
+          <!-- Loyalty / puntos -->
+          {{#hasLoyalty}}
+          <tr>
+            <td style="padding:8px 32px 0;">
+              <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%"
+                     style="background:#fff7ed;border:1px dashed #f59e0b;border-radius:12px;">
+                <tr>
+                  <td style="padding:14px 18px;">
+                    <div style="font-size:11px;text-transform:uppercase;letter-spacing:0.12em;color:#92400e;">{{lang}} · loyalty</div>
+                    <div style="font-size:18px;font-weight:700;color:#0f172a;margin-top:2px;">
+                      {{loyalty.puntos_acumulados}} pts
+                      {{#loyalty.nivel}}<span style="font-size:12px;font-weight:600;color:#92400e;background:#fde68a;padding:2px 8px;border-radius:999px;margin-left:6px;">{{loyalty.nivel}}</span>{{/loyalty.nivel}}
+                    </div>
+                    {{#loyalty.consultaUrl}}
+                    <a href="{{loyalty.consultaUrl}}" style="display:inline-block;margin-top:8px;font-size:12px;color:#92400e;text-decoration:underline;">
+                      {{lang}} · consultar saldo
+                    </a>
+                    {{/loyalty.consultaUrl}}
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+          {{/hasLoyalty}}
+
+          <!-- CTA -->
+          <tr>
+            <td style="padding:8px 32px 24px;">
+              {{#politicaCancelacionUrl}}
+              <p style="margin:0;font-size:13px;color:#64748b;line-height:1.6;">
+                {{strings.politicaIntro}}
+                <a href="{{politicaCancelacionUrl}}" style="color:#0e7c7b;text-decoration:underline;">{{strings.politicaLink}}</a>.
+              </p>
+              {{/politicaCancelacionUrl}}
+            </td>
+          </tr>
+
+          <!-- Footer -->
+          <tr>
+            <td style="background:#0f172a;color:#94a3b8;padding:20px 32px;text-align:center;font-size:12px;">
+              {{strings.footerHelp}}
+              <br/>
+              <a href="mailto:{{soportEmail}}" style="color:#94a3b8;text-decoration:underline;">{{soportEmail}}</a>
+            </td>
+          </tr>
+        </table>
+        <p style="margin:16px 0 0;font-size:11px;color:#94a3b8;">© {{year}} {{tenantNombre}}.</p>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>

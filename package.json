@@ -1,0 +1,35 @@
+{
+  "name": "keservicios-app",
+  "private": true,
+  "packageManager": "pnpm@11.1.1",
+  "engines": {
+    "node": ">=20",
+    "pnpm": ">=9"
+  },
+  "scripts": {
+    "dev": "pnpm -r --parallel dev",
+    "dev:frontend": "pnpm --filter keservicios-frontend dev",
+    "dev:backend": "pnpm --filter keservicios-backend dev",
+    "build": "pnpm --filter keservicios-frontend build && pnpm --filter keservicios-backend build",
+    "build:frontend": "pnpm --filter keservicios-frontend build",
+    "build:backend": "pnpm --filter keservicios-backend build",
+    "start": "pnpm --filter keservicios-backend start",
+    "start:backend": "pnpm --filter keservicios-backend start",
+    "db:generate": "pnpm --filter keservicios-backend db:generate",
+    "db:migrate": "pnpm --filter keservicios-backend db:migrate",
+    "db:studio": "pnpm --filter keservicios-backend db:studio",
+    "test": "pnpm --filter keservicios-backend test",
+    "test:unit": "pnpm --filter keservicios-backend test:unit",
+    "test:integration": "pnpm --filter keservicios-backend test:integration",
+    "install:all": "pnpm install"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "@prisma/client",
+      "@prisma/engines",
+      "esbuild",
+      "prisma",
+      "unrs-resolver"
+    ]
+  }
+}

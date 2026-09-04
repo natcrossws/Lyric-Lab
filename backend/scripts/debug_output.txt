@@ -1,0 +1,2 @@
+--- CatDia Content ---
+Error: relation "cat_dias" does not exist

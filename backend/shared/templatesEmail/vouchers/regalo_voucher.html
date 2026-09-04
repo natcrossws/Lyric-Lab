@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="{{lang}}">
+<head>
+  <meta charset="UTF-8" />
+  <title>{{subject}}</title>
+</head>
+<body style="margin:0;padding:0;background:#f4efe6;font-family:'Helvetica Neue',Arial,sans-serif;color:#1f2933;">
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#f4efe6;padding:32px 0;">
+    <tr>
+      <td align="center">
+        <table role="presentation" width="600" cellpadding="0" cellspacing="0" style="background:#ffffff;border-radius:18px;overflow:hidden;box-shadow:0 6px 20px rgba(15,23,42,0.08);">
+          <tr>
+            <td style="background:linear-gradient(135deg,#0e7c7b,#16b3a6);padding:40px 32px;color:#ffffff;text-align:center;">
+              {{#logoUrl}}<img src="{{logoUrl}}" alt="{{tenantNombre}}" style="max-height:56px;margin-bottom:16px;" />{{/logoUrl}}
+              <div style="font-size:13px;letter-spacing:3px;text-transform:uppercase;opacity:0.85;">{{tenantNombre}}</div>
+              <h1 style="margin:8px 0 4px;font-size:32px;font-weight:600;">{{strings.title}}</h1>
+              <p style="margin:0;font-size:15px;opacity:0.9;">{{strings.subtitle}}</p>
+            </td>
+          </tr>
+
+          <tr>
+            <td style="padding:32px 32px 8px;text-align:center;">
+              <p style="margin:0 0 12px;font-size:16px;line-height:1.6;">
+                {{strings.greetingPre}} <strong>{{destinatario.nombre}}</strong>,
+              </p>
+              <p style="margin:0 0 12px;font-size:15px;line-height:1.6;color:#475569;">
+                <strong>{{comprador.nombre}}</strong> {{strings.youReceived}}
+              </p>
+              {{#mensajePersonal}}
+              <div style="margin:18px auto;padding:16px 18px;background:#fff7ed;border-left:4px solid #f97316;border-radius:8px;text-align:left;font-style:italic;color:#7c2d12;max-width:420px;">
+                "{{mensajePersonal}}"
+              </div>
+              {{/mensajePersonal}}
+            </td>
+          </tr>
+
+          <tr>
+            <td style="padding:8px 32px 24px;">
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border:1px dashed #0e7c7b;border-radius:14px;overflow:hidden;background:#ecfeff;">
+                <tr>
+                  <td style="padding:24px 20px;text-align:center;">
+                    <div style="font-size:12px;letter-spacing:2px;text-transform:uppercase;color:#0e7c7b;">{{strings.codigo}}</div>
+                    <div style="font-size:24px;font-weight:700;color:#0f172a;letter-spacing:2px;margin-top:6px;font-family:'Courier New',monospace;">{{codigo}}</div>
+                    <div style="margin-top:14px;font-size:14px;color:#475569;">{{strings.saldo}}</div>
+                    <div style="font-size:30px;font-weight:700;color:#0e7c7b;margin-top:4px;">{{saldoFmt}}</div>
+                    {{#vencimientoFmt}}
+                    <div style="margin-top:14px;font-size:13px;color:#64748b;">{{strings.vence}} <strong>{{vencimientoFmt}}</strong></div>
+                    {{/vencimientoFmt}}
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <tr>
+            <td style="padding:0 32px 24px;text-align:center;">
+              {{#statusUrl}}
+              <a href="{{statusUrl}}" style="display:inline-block;padding:14px 28px;background:#0e7c7b;color:#ffffff;border-radius:999px;text-decoration:none;font-weight:600;font-size:15px;">{{strings.consultar}}</a>
+              {{/statusUrl}}
+              {{#bookingUrl}}
+              <div style="margin-top:14px;">
+                <a href="{{bookingUrl}}" style="color:#0e7c7b;text-decoration:underline;font-weight:500;font-size:14px;">{{strings.reservar}}</a>
+              </div>
+              {{/bookingUrl}}
+            </td>
+          </tr>
+
+          <tr>
+            <td style="padding:24px 32px 32px;border-top:1px solid #e2e8f0;text-align:center;color:#64748b;font-size:13px;line-height:1.6;">
+              {{strings.howto}}
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>

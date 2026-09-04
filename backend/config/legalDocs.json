@@ -1,0 +1,18 @@
+{
+  "AVISO_PRIVACIDAD": {
+    "version": "1.0",
+    "r2_key": null,
+    "mime": "application/pdf",
+    "nombre_archivo": null,
+    "updated_at": null,
+    "texto_preview": null
+  },
+  "TERMINOS_CONDICIONES": {
+    "version": "1.0",
+    "r2_key": null,
+    "mime": "application/pdf",
+    "nombre_archivo": null,
+    "updated_at": null,
+    "texto_preview": null
+  }
+}

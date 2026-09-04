@@ -1,0 +1,469 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model archivos {
+  id_archivo               Int                        @id @default(autoincrement())
+  fk_id_usuario_subio      Int?
+  fk_id_cat_tipo_archivo   Int?
+  fk_id_institucion        Int?
+  nombre_original          String?                    @db.VarChar(255)
+  nombre_servidor          String?                    @db.VarChar(255)
+  tipo_mime                String?                    @db.VarChar(100)
+  tamano_bytes             BigInt?
+  ruta                     String?                    @db.VarChar(500)
+  f_reg                    DateTime?                  @db.Timestamptz(6)
+  rel_usuarios_archivos    rel_usuarios_archivos[]
+  tenant_documentos_legales tenant_documentos_legales[]
+}
+
+model cat_archivo_tipos {
+  id_cat_tipo_archivo   Int                     @id @default(autoincrement())
+  codigo_tipo           String?                 @db.VarChar(50)
+  descripcion           String?                 @db.VarChar(100)
+  rel_usuarios_archivos rel_usuarios_archivos[]
+}
+
+model cat_estados {
+  id_cat_estado Int           @id @default(autoincrement())
+  estado        String?       @db.VarChar(80)
+  cve_edo       String?       @db.VarChar(5)
+  abbrev        String?       @db.VarChar(10)
+  direcciones   direcciones[]
+}
+
+model cat_municipios {
+  id_cat_municipio Int           @id @default(autoincrement())
+  municipio        String?       @db.VarChar(150)
+  fk_id_cat_estado Int?
+  cve_mun          String?       @db.VarChar(5)
+  direcciones      direcciones[]
+}
+
+model cat_paises {
+  id_cat_pais Int           @id @default(autoincrement())
+  nombre      String        @db.VarChar(255)
+  codigo_iso  String?       @db.VarChar(3)
+  activo      Boolean?      @default(true)
+  f_reg       DateTime      @db.Timestamptz(6)
+  f_mod       DateTime      @db.Timestamptz(6)
+  direcciones direcciones[]
+}
+
+model cat_tipo_usuario {
+  id_cat_tipo_usuario                Int                                  @id @default(autoincrement())
+  tipo                               String                               @db.VarChar(50)
+  f_reg                              DateTime?                            @db.Timestamptz(6)
+  usuarios                           usuarios[]
+  rel_cat_plan_suscripcion_submodulo rel_cat_plan_suscripcion_submodulo[]
+  configuracion_documentos           configuracion_documentos[]
+}
+
+model cat_locale {
+  id_cat_locale  Int             @id @default(autoincrement())
+  codigo         String          @unique @db.VarChar(16)
+  nombre         String          @db.VarChar(100)
+  activo         Boolean         @default(true)
+  instituciones  instituciones[]
+}
+
+model cat_moneda {
+  id_cat_moneda  Int             @id @default(autoincrement())
+  codigo         String          @unique @db.VarChar(8)
+  nombre         String          @db.VarChar(100)
+  simbolo        String?         @db.VarChar(8)
+  activo         Boolean         @default(true)
+  instituciones  instituciones[]
+}
+
+model cat_planes_suscripcion {
+  id_cat_plan_suscripcion            Int                                  @id @default(autoincrement())
+  nombre                             String                               @db.VarChar(50)
+  precio_mensual                     Decimal                              @db.Decimal(10, 2)
+  limite_horas_ia                    Int?                                 @default(0)
+  limite_storage_gb                  Int?                                 @default(0)
+  limite_users                       Int?                                 @default(0)
+  activo                             Boolean                              @default(true)
+  instituciones                      instituciones[]
+  rel_cat_plan_suscripcion_submodulo rel_cat_plan_suscripcion_submodulo[]
+  suscripciones                      suscripciones[]
+}
+
+model cat_estatus_suscripcion {
+  id_cat_estatus_suscripcion Int             @id @default(autoincrement())
+  codigo                     String          @unique @db.VarChar(50)
+  nombre                     String          @db.VarChar(100)
+  orden                      Int             @default(0)
+  suscripciones              suscripciones[]
+}
+
+model cat_estatus_pago_suscripcion {
+  id_cat_estatus_pago_suscripcion Int                   @id @default(autoincrement())
+  codigo                          String                @unique @db.VarChar(50)
+  nombre                          String                @db.VarChar(100)
+  orden                           Int                   @default(0)
+  pagos_suscripciones             pagos_suscripciones[]
+}
+
+model cat_intervalo_facturacion {
+  id_cat_intervalo_facturacion Int             @id @default(autoincrement())
+  codigo                       String          @unique @db.VarChar(50)
+  nombre                       String          @db.VarChar(100)
+  orden                        Int             @default(0)
+  suscripciones                suscripciones[]
+}
+
+model cat_proveedor_pago {
+  id_cat_proveedor_pago Int             @id @default(autoincrement())
+  codigo                String          @unique @db.VarChar(50)
+  nombre                String          @db.VarChar(100)
+  orden                 Int             @default(0)
+  suscripciones         suscripciones[]
+}
+
+model cat_tipo_linea_suscripcion {
+  id_cat_tipo_linea_suscripcion Int                     @id @default(autoincrement())
+  codigo                        String                  @unique @db.VarChar(50)
+  nombre                        String                  @db.VarChar(100)
+  orden                         Int                     @default(0)
+  suscripciones_detalle         suscripciones_detalle[]
+}
+
+model cat_paquetes_cuota {
+  id_cat_paquete_cuota  Int                     @id @default(autoincrement())
+  codigo                String                  @unique @db.VarChar(64)
+  nombre                String                  @db.VarChar(200)
+  tipo                  String                  @db.VarChar(32)
+  cantidad              Int
+  precio_mensual_mxn    Decimal                 @db.Decimal(12, 2)
+  orden                 Int                     @default(0)
+  activo                Boolean                 @default(true)
+  suscripciones_detalle suscripciones_detalle[]
+}
+
+model cat_tipos_documento {
+  id_cat_tipo_documento     Int                         @id @default(autoincrement())
+  codigo                    String                      @unique @db.VarChar(64)
+  nombre                    String                      @db.VarChar(150)
+  orden                     Int                         @default(0)
+  activo                    Boolean                     @default(true)
+  f_reg                     DateTime?                   @db.Timestamptz(6)
+  aceptacion_documentos     aceptacion_documentos[]
+  configuracion_documentos  configuracion_documentos[]
+  tenant_documentos_legales tenant_documentos_legales[]
+}
+
+model direcciones {
+  id_direccion        Int             @id @default(autoincrement())
+  fk_id_usuario       Int
+  calle               String?         @db.VarChar(150)
+  numero_exterior     String?         @db.VarChar(20)
+  numero_interior     String?         @db.VarChar(20)
+  colonia             String?         @db.VarChar(150)
+  cp                  Int?
+  fk_id_cat_municipio Int?
+  fk_id_cat_estado    Int?
+  fk_id_cat_pais      Int?
+  estado_texto        String?         @db.VarChar(100)
+  municipio_texto     String?         @db.VarChar(100)
+  activo              Boolean?        @default(true)
+  f_reg               DateTime        @db.Timestamptz(6)
+  f_mod               DateTime        @db.Timestamptz(6)
+  cat_estados         cat_estados?    @relation(fields: [fk_id_cat_estado], references: [id_cat_estado], onDelete: NoAction)
+  cat_municipios      cat_municipios? @relation(fields: [fk_id_cat_municipio], references: [id_cat_municipio], onDelete: NoAction)
+  cat_paises          cat_paises?     @relation(fields: [fk_id_cat_pais], references: [id_cat_pais], onDelete: NoAction)
+  usuarios            usuarios        @relation(fields: [fk_id_usuario], references: [id_usuario], onDelete: Cascade)
+}
+
+model instituciones {
+  id_institucion             Int                         @id @default(autoincrement())
+  nombre                     String                      @db.VarChar(150)
+  slug                       String                      @unique @db.VarChar(50)
+  fk_id_cat_plan_suscripcion Int?
+  subdominio                 String?                     @unique @db.VarChar(120)
+  fk_id_cat_locale_default   Int?
+  fk_id_cat_moneda           Int?
+  configuracion_json         Json?                       @default("{}") @db.Json
+  activo                     Boolean?                    @default(true)
+  stripe_account_id          String?                     @db.VarChar(255)
+  f_reg                      DateTime?                   @db.Timestamptz(6)
+  rel_usuario_institucion    rel_usuario_institucion[]
+  usuarios                   usuarios[]
+  cat_planes_suscripcion     cat_planes_suscripcion?     @relation(fields: [fk_id_cat_plan_suscripcion], references: [id_cat_plan_suscripcion])
+  cat_locale                 cat_locale?                 @relation(fields: [fk_id_cat_locale_default], references: [id_cat_locale])
+  cat_moneda                 cat_moneda?                 @relation(fields: [fk_id_cat_moneda], references: [id_cat_moneda])
+  suscripciones              suscripciones[]
+  pagos_suscripciones        pagos_suscripciones[]
+  tenant_documentos_legales  tenant_documentos_legales[]
+
+  @@index([fk_id_cat_plan_suscripcion])
+}
+
+model suscripciones {
+  id_suscripcion                 Int                          @id @default(autoincrement())
+  fk_id_institucion              Int
+  fk_id_cat_plan_suscripcion     Int?
+  fk_id_cat_estatus_suscripcion  Int
+  fk_id_cat_intervalo_facturacion Int?
+  fk_id_cat_proveedor_pago       Int?
+  fecha_inicio                   DateTime                     @db.Timestamptz(6)
+  fecha_fin                      DateTime?                    @db.Timestamptz(6)
+  fecha_proximo_cobro            DateTime?                    @db.Timestamptz(6)
+  stripe_subscription_id         String?                      @db.VarChar(255)
+  stripe_customer_id             String?                      @db.VarChar(255)
+  precio_total_mensual_snapshot  Decimal?                     @db.Decimal(12, 2)
+  created_at                     DateTime                     @default(now()) @db.Timestamptz(6)
+  updated_at                     DateTime                     @updatedAt @db.Timestamptz(6)
+  instituciones                  instituciones                @relation(fields: [fk_id_institucion], references: [id_institucion], onDelete: Cascade)
+  cat_planes_suscripcion         cat_planes_suscripcion?      @relation(fields: [fk_id_cat_plan_suscripcion], references: [id_cat_plan_suscripcion])
+  cat_estatus_suscripcion        cat_estatus_suscripcion      @relation(fields: [fk_id_cat_estatus_suscripcion], references: [id_cat_estatus_suscripcion])
+  cat_intervalo_facturacion      cat_intervalo_facturacion?   @relation(fields: [fk_id_cat_intervalo_facturacion], references: [id_cat_intervalo_facturacion])
+  cat_proveedor_pago             cat_proveedor_pago?          @relation(fields: [fk_id_cat_proveedor_pago], references: [id_cat_proveedor_pago])
+  suscripciones_detalle          suscripciones_detalle[]
+  pagos_suscripciones            pagos_suscripciones[]
+
+  @@index([fk_id_institucion])
+  @@index([fk_id_cat_estatus_suscripcion])
+}
+
+model suscripciones_detalle {
+  id_suscripcion_detalle        Int                          @id @default(autoincrement())
+  fk_id_suscripcion             Int
+  fk_id_cat_tipo_linea_suscripcion Int
+  fk_id_modulo                  Int?
+  fk_id_submodulo               Int?
+  fk_id_cat_paquete_cuota       Int?
+  cantidad                      Int?
+  precio_unitario_mensual       Decimal?                     @db.Decimal(12, 2)
+  precio_linea_mensual          Decimal?                     @db.Decimal(12, 2)
+  created_at                    DateTime                     @default(now()) @db.Timestamptz(6)
+  suscripciones                 suscripciones                @relation(fields: [fk_id_suscripcion], references: [id_suscripcion], onDelete: Cascade)
+  cat_tipo_linea_suscripcion    cat_tipo_linea_suscripcion   @relation(fields: [fk_id_cat_tipo_linea_suscripcion], references: [id_cat_tipo_linea_suscripcion])
+  cat_paquetes_cuota            cat_paquetes_cuota?          @relation(fields: [fk_id_cat_paquete_cuota], references: [id_cat_paquete_cuota])
+  modulos                       modulos?                     @relation(fields: [fk_id_modulo], references: [id_modulo])
+  submodulos                    submodulos?                  @relation(fields: [fk_id_submodulo], references: [id_submodulo])
+
+  @@index([fk_id_suscripcion])
+}
+
+model pagos_suscripciones {
+  id_pago_suscripcion             Int                            @id @default(autoincrement())
+  fk_id_institucion               Int
+  monto                           Decimal                        @db.Decimal(10, 2)
+  moneda                          String                         @default("mxn") @db.VarChar(10)
+  status                          String                         @db.VarChar(50)
+  fecha_pago                      DateTime                       @default(now()) @db.Timestamptz(6)
+  metodo_pago                     String                         @default("stripe") @db.VarChar(50)
+  stripe_session_id               String?                        @db.VarChar(255)
+  intervalo                       String?                        @db.VarChar(20)
+  fk_id_suscripcion               Int?
+  fk_id_cat_estatus_pago_suscripcion Int?
+  created_at                      DateTime                       @default(now()) @db.Timestamptz(6)
+  instituciones                   instituciones                  @relation(fields: [fk_id_institucion], references: [id_institucion], onDelete: Cascade)
+  suscripciones                   suscripciones?                 @relation(fields: [fk_id_suscripcion], references: [id_suscripcion])
+  cat_estatus_pago_suscripcion    cat_estatus_pago_suscripcion?  @relation(fields: [fk_id_cat_estatus_pago_suscripcion], references: [id_cat_estatus_pago_suscripcion])
+
+  @@index([fk_id_institucion])
+  @@index([stripe_session_id])
+}
+
+model rel_cat_plan_suscripcion_submodulo {
+  id_rel_cat_plan_suscripcion_submodulo Int                     @id @default(autoincrement())
+  fk_id_cat_plan_suscripcion            Int
+  fk_id_submodulo                       Int
+  fk_id_cat_tipo_usuario                Int
+  f_reg                                 DateTime                @default(now()) @db.Timestamptz(6)
+  vigente                               Boolean                 @default(true)
+  cat_planes_suscripcion                cat_planes_suscripcion  @relation(fields: [fk_id_cat_plan_suscripcion], references: [id_cat_plan_suscripcion], onDelete: Cascade)
+  submodulos                            submodulos              @relation(fields: [fk_id_submodulo], references: [id_submodulo], onDelete: Cascade)
+  cat_tipo_usuario                      cat_tipo_usuario        @relation(fields: [fk_id_cat_tipo_usuario], references: [id_cat_tipo_usuario], onDelete: Cascade)
+
+  @@index([fk_id_cat_plan_suscripcion])
+  @@index([fk_id_submodulo])
+}
+
+model aceptacion_documentos {
+  id                      Int                  @id @default(autoincrement())
+  fk_id_usuario           Int
+  fk_id_cat_tipo_documento Int
+  version                 String
+  ip_address              String?
+  fecha_aceptacion        DateTime             @default(now()) @db.Timestamptz(6)
+  usuarios                usuarios             @relation(fields: [fk_id_usuario], references: [id_usuario], onDelete: Cascade)
+  cat_tipos_documento     cat_tipos_documento  @relation(fields: [fk_id_cat_tipo_documento], references: [id_cat_tipo_documento])
+
+  @@index([fk_id_usuario])
+  @@unique([fk_id_usuario, fk_id_cat_tipo_documento, version])
+}
+
+model configuracion_documentos {
+  id                       Int                 @id @default(autoincrement())
+  fk_id_cat_tipo_usuario   Int
+  fk_id_cat_tipo_documento Int
+  obligatorio              Boolean             @default(true)
+  cat_tipo_usuario         cat_tipo_usuario    @relation(fields: [fk_id_cat_tipo_usuario], references: [id_cat_tipo_usuario], onDelete: Cascade)
+  cat_tipos_documento      cat_tipos_documento @relation(fields: [fk_id_cat_tipo_documento], references: [id_cat_tipo_documento], onDelete: Cascade)
+
+  @@unique([fk_id_cat_tipo_usuario, fk_id_cat_tipo_documento])
+}
+
+model tenant_documentos_legales {
+  id_tenant_documento_legal Int                 @id @default(autoincrement())
+  fk_id_institucion         Int
+  fk_id_cat_tipo_documento  Int
+  version                   String              @db.VarChar(32)
+  titulo                    Json?               @db.JsonB
+  contenido_html            Json?               @db.JsonB
+  fk_id_archivo             Int?
+  activo                    Boolean             @default(true)
+  vigente_desde             DateTime            @default(now()) @db.Timestamptz(6)
+  f_reg                     DateTime            @default(now()) @db.Timestamptz(6)
+  f_mod                     DateTime            @updatedAt @db.Timestamptz(6)
+  instituciones             instituciones       @relation(fields: [fk_id_institucion], references: [id_institucion], onDelete: Cascade)
+  cat_tipos_documento       cat_tipos_documento @relation(fields: [fk_id_cat_tipo_documento], references: [id_cat_tipo_documento])
+  archivos                  archivos?           @relation(fields: [fk_id_archivo], references: [id_archivo])
+
+  @@index([fk_id_institucion])
+  @@index([fk_id_cat_tipo_documento])
+}
+
+model modulos {
+  id_modulo             Int                     @id @default(autoincrement())
+  titulo                String                  @db.VarChar(255)
+  icono                 String?                 @db.VarChar(255)
+  visible               Boolean?                @default(true)
+  activo                Boolean?                @default(true)
+  orden                 Int?                    @default(0)
+  f_reg                 DateTime                @db.Timestamptz(6)
+  precio_addon_mensual  Decimal?                @db.Decimal(12, 2)
+  submodulos            submodulos[]
+  suscripciones_detalle suscripciones_detalle[]
+}
+
+model rel_modulos_modulos {
+  id_rel_modulo_modulo   Int @id @default(autoincrement())
+  fk_id_modulo           Int
+  fk_id_modulo_requerido Int
+}
+
+model rel_submodulos_modulos {
+  id_rel_submodulo_modulo Int @id @default(autoincrement())
+  fk_id_submodulo         Int
+  fk_id_modulo            Int
+}
+
+model rel_submodulos_submodulos {
+  id_rel_submodulo_submodulo Int @id @default(autoincrement())
+  fk_id_submodulo            Int
+  fk_id_submodulo_requerido  Int
+}
+
+model rel_usuario_institucion {
+  id                Int           @id @default(autoincrement())
+  fk_id_usuario     Int
+  fk_id_institucion Int
+  activo            Boolean?      @default(true)
+  f_reg             DateTime      @db.Timestamptz(6)
+  instituciones     instituciones @relation(fields: [fk_id_institucion], references: [id_institucion], onDelete: Cascade)
+  usuarios          usuarios      @relation(fields: [fk_id_usuario], references: [id_usuario], onDelete: Cascade)
+
+  @@unique([fk_id_usuario, fk_id_institucion])
+}
+
+model rel_usuario_submodulo {
+  id_rel_usuario_submodulo Int        @id @default(autoincrement())
+  fk_id_usuario            Int
+  fk_id_submodulo          Int
+  activo                   Boolean?   @default(true)
+  submodulos               submodulos @relation(fields: [fk_id_submodulo], references: [id_submodulo], onDelete: NoAction)
+  usuarios                 usuarios   @relation(fields: [fk_id_usuario], references: [id_usuario], onDelete: Cascade)
+}
+
+model rel_usuarios_archivos {
+  id_rel_usuario_archivo Int                @id @default(autoincrement())
+  fk_id_usuario          Int?
+  fk_id_archivo          Int?
+  fk_id_cat_tipo_archivo Int?
+  activo                 Boolean?           @default(true)
+  f_reg                  DateTime?          @db.Timestamptz(6)
+  archivos               archivos?          @relation(fields: [fk_id_archivo], references: [id_archivo], onDelete: Cascade)
+  cat_archivo_tipos      cat_archivo_tipos? @relation(fields: [fk_id_cat_tipo_archivo], references: [id_cat_tipo_archivo], onDelete: NoAction)
+  usuarios               usuarios?          @relation(fields: [fk_id_usuario], references: [id_usuario], onDelete: Cascade)
+
+  @@unique([fk_id_usuario, fk_id_archivo])
+}
+
+model rutas {
+  id_ruta         Int          @id @default(autoincrement())
+  ruta            String       @db.VarChar(255)
+  archivo         String?      @db.VarChar(255)
+  activo          Boolean?     @default(true)
+  vista_principal Boolean?     @default(false)
+  f_reg           DateTime     @db.Timestamptz(6)
+  submodulos      submodulos[]
+}
+
+model submodulos {
+  id_submodulo                       Int                                  @id @default(autoincrement())
+  fk_id_modulo                       Int
+  fk_id_ruta                         Int?
+  titulo                             String                               @db.VarChar(100)
+  descripcion                        String?                              @db.VarChar(255)
+  icono                              String?                              @db.VarChar(50)
+  orden                              Int?                                 @default(0)
+  activo                             Boolean                              @default(true)
+  requisitos_plan_json               Json?
+  precio_addon_mensual               Decimal?                             @db.Decimal(12, 2)
+  rel_usuario_submodulo              rel_usuario_submodulo[]
+  modulos                            modulos                              @relation(fields: [fk_id_modulo], references: [id_modulo], onDelete: Cascade)
+  rutas                              rutas?                               @relation(fields: [fk_id_ruta], references: [id_ruta])
+  rel_cat_plan_suscripcion_submodulo rel_cat_plan_suscripcion_submodulo[]
+  suscripciones_detalle              suscripciones_detalle[]
+}
+
+model usuarios {
+  id_usuario                Int                       @id @default(autoincrement())
+  nombre                    String                    @db.VarChar(255)
+  email                     String?                   @unique @db.VarChar(255)
+  telefono                  String?                   @db.VarChar(50)
+  curp                      String?                   @db.VarChar(20)
+  hash_pass                 String?                   @db.VarChar(255)
+  fk_id_cat_tipo_usuario    Int
+  activo                    Boolean?                  @default(true)
+  ultimo_login              DateTime?                 @db.Timestamptz(6)
+  twofa_enabled             Boolean?                  @default(false)
+  campass                   Boolean?                  @default(false)
+  fk_id_institucion         Int?
+  cupo_registro_menores_max Int?
+  f_reg                     DateTime                  @db.Timestamptz(6)
+  f_mod                     DateTime                  @db.Timestamptz(6)
+  direcciones               direcciones[]
+  rel_usuario_institucion   rel_usuario_institucion[]
+  rel_usuario_submodulo     rel_usuario_submodulo[]
+  rel_usuarios_archivos     rel_usuarios_archivos[]
+  cat_tipo_usuario          cat_tipo_usuario          @relation(fields: [fk_id_cat_tipo_usuario], references: [id_cat_tipo_usuario], onDelete: NoAction)
+  instituciones             instituciones?            @relation(fields: [fk_id_institucion], references: [id_institucion])
+  webauthn_credentials      webauthn_credentials[]
+  aceptacion_documentos     aceptacion_documentos[]
+}
+
+model webauthn_credentials {
+  id_credential Int       @id @default(autoincrement())
+  fk_id_usuario Int
+  credential_id String    @unique(map: "webauthn_credentials_credential_id")
+  public_key    String
+  counter       BigInt    @default(0)
+  device_name   String?   @db.VarChar(255)
+  last_used     DateTime? @db.Timestamptz(6)
+  activo        Boolean?  @default(true)
+  f_reg         DateTime  @db.Timestamptz(6)
+  f_mod         DateTime  @db.Timestamptz(6)
+  usuarios      usuarios  @relation(fields: [fk_id_usuario], references: [id_usuario], onDelete: NoAction)
+
+  @@index([fk_id_usuario], map: "webauthn_credentials_fk_id_usuario")
+}

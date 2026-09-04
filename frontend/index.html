@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <!-- theme-color: meta inicial; script inline aplica color antes del bundle (SPA). Mantener lógica alineada con documentThemeColor.js + syncThemeColorMeta.js -->
+    <meta id="ke-theme-color" name="theme-color" content="#F7F4D5" />
+    <meta id="ke-theme-color-light" name="theme-color" content="#F7F4D5" media="(prefers-color-scheme: light)" />
+    <meta id="ke-theme-color-dark" name="theme-color" content="#F7F4D5" media="(prefers-color-scheme: dark)" />
+    <meta id="ke-color-scheme" name="color-scheme" content="light dark" />
+    <script>
+      (function () {
+        function match(p, pre) {
+          return p === pre || p.startsWith(pre + '/');
+        }
+        var path = location.pathname || '/';
+        var cs = document.getElementById('ke-color-scheme');
+        if (cs) cs.setAttribute('content', match(path, '/login') ? 'dark' : 'light dark');
+        var c = '#F7F4D5';
+        if (match(path, '/login')) c = '#105666';
+        else if (
+          match(path, '/change-password') ||
+          match(path, '/planes') ||
+          match(path, '/registro-institucion') ||
+          match(path, '/succes-subscription') ||
+          match(path, '/aceptacion-documentos') ||
+          match(path, '/aviso-privacidad') ||
+          match(path, '/test-passkeys') ||
+          match(path, '/test-audio')
+        )
+          c = '#0A3323';
+        else if (
+          match(path, '/admin') ||
+          match(path, '/profesor') ||
+          match(path, '/padre') ||
+          match(path, '/alumno')
+        )
+          c = '#105666';
+        var el = document.getElementById('ke-theme-color');
+        if (el) el.setAttribute('content', c);
+        var elLight = document.getElementById('ke-theme-color-light');
+        if (elLight) elLight.setAttribute('content', c);
+        var elDark = document.getElementById('ke-theme-color-dark');
+        if (elDark) elDark.setAttribute('content', c);
+        document.documentElement.style.backgroundColor = c;
+        function applyBodyBg() {
+          if (document.body) document.body.style.backgroundColor = c;
+        }
+        applyBodyBg();
+        if (!document.body) {
+          document.addEventListener('DOMContentLoaded', applyBodyBg);
+        }
+        if (c === '#105666') document.documentElement.style.colorScheme = 'dark';
+        else if (c === '#0A3323') document.documentElement.style.colorScheme = 'dark';
+        else document.documentElement.style.colorScheme = 'light';
+      })();
+    </script>
+    <link rel="icon" type="image/png" href="/favicon.png" />
+    <title>KePlayas</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
+

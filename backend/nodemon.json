@@ -1,0 +1,7 @@
+{
+  "watch": ["**/*.ts"],
+  "ignore": ["node_modules", "dist", "__tests__"],
+  "ext": "ts,json",
+  "exec": "tsc && node dist/server.js",
+  "delay": "500"
+}

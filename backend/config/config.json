@@ -1,0 +1,23 @@
+{
+  "development": {
+    "username": "fer",
+    "password": "55748",
+    "database": "db_ke_escuela_dev",
+    "host": "74.208.212.15",
+    "dialect": "postgres"
+  },
+  "test": {
+    "username": "fer",
+    "password": "55748",
+    "database": "db_ke_escuela_test",
+    "host": "74.208.212.15",
+    "dialect": "postgres"
+  },
+  "production": {
+    "username": "fer",
+    "password": "55748",
+    "database": "db_ke_escuela_prod",
+    "host": "74.208.212.15",
+    "dialect": "postgres"
+  }
+}
